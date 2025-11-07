@@ -43,14 +43,41 @@ const Payment = () => {
       return;
     }
 
-    // Store payment data and navigate to receipt
-    sessionStorage.setItem("paymentData", JSON.stringify(formData));
-    navigate("/receipt");
-    
+    // Mock Remita Payment Gateway Integration
     toast({
-      title: "Payment Initiated",
-      description: "Processing your payment request...",
+      title: "Redirecting to Remita",
+      description: "Please wait while we connect to Remita Payment Gateway...",
     });
+
+    // Simulate Remita API call
+    setTimeout(() => {
+      const rrr = `REM${Math.floor(Math.random() * 1000000000)}`;
+      
+      toast({
+        title: "Payment Gateway Ready",
+        description: `RRR Generated: ${rrr}`,
+      });
+
+      // Mock SMS notification
+      if (formData.phone) {
+        setTimeout(() => {
+          toast({
+            title: "SMS Sent",
+            description: `Payment notification sent to ${formData.phone}`,
+          });
+        }, 1000);
+      }
+
+      // Store payment data with RRR and navigate to receipt
+      sessionStorage.setItem("paymentData", JSON.stringify({
+        ...formData,
+        rrr,
+        paymentMethod: "Remita",
+        timestamp: new Date().toISOString()
+      }));
+      
+      setTimeout(() => navigate("/receipt"), 2000);
+    }, 1500);
   };
 
   return (
@@ -167,16 +194,26 @@ const Payment = () => {
                   />
                 </div>
 
-                {/* Payment Methods Info */}
-                <Card className="bg-secondary/30 border-border">
+                {/* Payment Gateway Info */}
+                <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                   <CardContent className="pt-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                        <CreditCard className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Remita Payment Gateway</p>
+                        <p className="text-xs text-muted-foreground">Secure & Trusted</p>
+                      </div>
+                    </div>
                     <p className="text-sm text-muted-foreground mb-2 font-medium">Available Payment Methods:</p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Online Payment (Card, Bank Transfer)</li>
+                      <li>• Remita Online Payment (Card, Bank Transfer)</li>
                       <li>• USSD (*737# GTBank, *894# FirstBank, etc.)</li>
-                      <li>• Bank Branch Payment</li>
+                      <li>• Bank Branch Payment with RRR</li>
                       <li>• POS Payment at LGA Office</li>
                     </ul>
+                    <p className="text-xs text-primary mt-3">✓ SMS notifications enabled</p>
                   </CardContent>
                 </Card>
 

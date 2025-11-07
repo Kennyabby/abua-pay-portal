@@ -140,9 +140,11 @@ const Admin = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button size="lg">
-                Sign In as Admin
-              </Button>
+              <Link to="/admin/login">
+                <Button size="lg">
+                  Sign In as Admin
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

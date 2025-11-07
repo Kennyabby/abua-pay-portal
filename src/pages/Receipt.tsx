@@ -3,20 +3,33 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, CheckCircle, Download, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const Receipt = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [paymentData, setPaymentData] = useState<any>(null);
   const [receiptNumber] = useState(() => `IGR/${new Date().getFullYear()}/${Math.floor(Math.random() * 1000000)}`);
 
   useEffect(() => {
     const data = sessionStorage.getItem("paymentData");
     if (data) {
-      setPaymentData(JSON.parse(data));
+      const parsed = JSON.parse(data);
+      setPaymentData(parsed);
+      
+      // Show SMS notification toast if phone number exists
+      if (parsed.phone) {
+        setTimeout(() => {
+          toast({
+            title: "Receipt SMS Sent",
+            description: `Digital receipt sent to ${parsed.phone}`,
+          });
+        }, 1000);
+      }
     } else {
       navigate("/payment");
     }
-  }, [navigate]);
+  }, [navigate, toast]);
 
   if (!paymentData) return null;
 
@@ -77,6 +90,16 @@ const Receipt = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-4 text-foreground">Payment Information</h3>
                 <div className="space-y-3">
+                  {paymentData.rrr && (
+                    <div className="flex justify-between py-2 border-b border-border bg-primary/5 px-2 rounded">
+                      <span className="text-muted-foreground font-semibold">Remita RRR:</span>
+                      <span className="font-bold text-primary">{paymentData.rrr}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between py-2 border-b border-border">
+                    <span className="text-muted-foreground">Payment Method:</span>
+                    <span className="font-medium text-foreground">{paymentData.paymentMethod || 'Online'}</span>
+                  </div>
                   <div className="flex justify-between py-2 border-b border-border">
                     <span className="text-muted-foreground">Payment Category:</span>
                     <span className="font-medium text-foreground">{paymentData.category}</span>
@@ -97,6 +120,12 @@ const Receipt = () => {
                     <div className="flex justify-between py-2 border-b border-border">
                       <span className="text-muted-foreground">Description:</span>
                       <span className="font-medium text-foreground">{paymentData.description}</span>
+                    </div>
+                  )}
+                  {paymentData.phone && (
+                    <div className="flex justify-between py-2 bg-accent/5 px-2 rounded">
+                      <span className="text-muted-foreground">SMS Notification:</span>
+                      <span className="text-xs text-primary font-medium">✓ Sent to {paymentData.phone}</span>
                     </div>
                   )}
                 </div>

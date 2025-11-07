@@ -52,10 +52,15 @@ const Index = () => {
             <Link to="/citizen" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Citizen Portal
             </Link>
-            <Link to="/admin" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <Link to="/business/auth" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+              Business Portal
+            </Link>
+            <Link to="/admin/login" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Admin
             </Link>
-            <Button variant="default">Make Payment</Button>
+            <Link to="/payment">
+              <Button variant="default">Make Payment</Button>
+            </Link>
           </nav>
         </div>
       </header>
